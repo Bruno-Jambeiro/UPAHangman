@@ -1,3 +1,36 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:18ac560eb04736a97dd3794671718c14f02ef656c373d1e7be46dc36cf2c1eda
-size 976
+import fasttext.util
+import fasttext
+import unicodedata
+import pickle
+import numpy as np
+
+def remover_acentos(texto: str) -> str:
+    # Normaliza para decompor acentos e depois filtra os combinantes
+    nfkd = unicodedata.normalize('NFD', texto)
+    return ''.join(
+        c for c in nfkd
+        if unicodedata.category(c) != 'Mn'
+    )
+
+def main():
+    # 1. Baixa o modelo em português, se ainda não estiver presente
+    fasttext.util.download_model('pt', if_exists='ignore')
+    model = fasttext.load_model('cc.pt.300.bin')
+
+
+    with open('br-utf8.txt', 'r', encoding='utf-8') as file:
+        raw_text = file.read()
+        words = raw_text.split()
+
+    new_file = []
+    for word in words:
+        vec = model.get_word_vector(word)
+        clean_word = remover_acentos(word)
+        new_file.append((clean_word, word, vec))
+
+    with open("AllWordsProcessed.pkl", "wb") as f:
+        pickle.dump(new_file, f)
+    print(new_file)
+
+if __name__ == '__main__':
+    main()
