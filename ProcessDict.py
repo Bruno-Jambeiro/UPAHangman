@@ -25,8 +25,15 @@ def main():
     new_file = []
     for word in words:
         vec = model.get_word_vector(word)
-        clean_word = remover_acentos(word)
-        new_file.append((clean_word, word, vec))
+        clean_word = remover_acentos(word).upper() #Torna letras maiúsculas o padrão
+        tem_letra = np.zeros(26, dtype=np.float64)
+        for char in clean_word:
+            try:
+                tem_letra[ord(char)-ord('A')] = 1.0
+            except IndexError:
+                print(char, word, clean_word)
+                exit(-1)
+        new_file.append((clean_word, word, vec, tem_letra))
 
     with open("AllWordsProcessed.pkl", "wb") as f:
         pickle.dump(new_file, f)
