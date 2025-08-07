@@ -1,4 +1,4 @@
-from main import *
+from Hangman import *
 Game = HangmanSolver()
 Game.new_game("VUlCÃO", 10)
 print(Game.make_guess())
