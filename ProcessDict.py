@@ -21,7 +21,7 @@ def main():
     with open('br-utf8.txt', 'r', encoding='utf-8') as file:
         raw_text = file.read()
         words = raw_text.split()
-
+    words = [i.upper() for i in words]
     new_file = []
     for word in words:
         vec = model.get_word_vector(word)

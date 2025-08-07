@@ -17,10 +17,10 @@ sim = cosine(vec_apple, vec_banana)
 print(f"Similaridade(maçã, banana) = {sim:.4f}")
 
 # 3. Ranking de um vocabulário customizado em português
-vocab = ["maçã", "banana", "carro", "caminhão", "fruta", "amor"]
-target = "maçã"
+vocab = ["maçã", "banana", "carro", "caminhão", "fruta", "amor", "Chimpanzé", "mão", "axila"]
+target = "Corpo Humano".upper()
 
-target_vec = model.get_word_vector(target)
+target_vec = model.get_sentence_vector(target)
 
 scores = [(w, cosine(target_vec, model.get_word_vector(w))) for w in vocab]
 ranked = sorted(scores, key=lambda x: x[1], reverse=True)
