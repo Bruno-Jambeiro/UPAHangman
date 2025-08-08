@@ -41,6 +41,11 @@ class HangmanAdivinhadorUI(ctk.CTk):
 
         self.mensagem_label = ctk.CTkLabel(self, text="", font=mensagem_font)
 
+        # Canvas for stick figure
+        self.hangman_canvas = ctk.CTkCanvas(self, width=220, height=320, bg="#242424", highlightthickness=0)
+        self.hangman_canvas.grid(row=0, column=2, rowspan=8, padx=30, pady=30)
+        self.erros = 0
+
         # Layout
         self.tema_label.grid(row=0, column=0, padx=20, pady=20)
         self.tema_entry.grid(row=0, column=1, padx=20, pady=20)
@@ -92,6 +97,9 @@ class HangmanAdivinhadorUI(ctk.CTk):
         self.suposicao_atual = ["*"] * tamanho  # Suposição inicial com asteriscos
         self.suposicao_label.configure(text=" ".join(self.suposicao_atual))
         self.fazer_suposicao()
+        self.erros = 0
+        self.hangman_canvas.delete("all")
+        self.desenhar_forca()
 
     def criar_letra_entries(self, tamanho):
         # Remove previous entries
@@ -127,12 +135,14 @@ class HangmanAdivinhadorUI(ctk.CTk):
 
         if posicoes:
             for pos in posicoes:
-                self.suposicao_atual[pos] = self.letra_atual  # Atualiza suposição
+                self.suposicao_atual[pos] = self.letra_atual
                 self.letra_entries[pos].delete(0, "end")
                 self.letra_entries[pos].insert(0, self.letra_atual)
             self.solver.filter_positive("".join(self.suposicao_atual))
         else:
             self.solver.filter_negative(self.letra_atual)
+            self.erros += 1
+            self.atualizar_desenho_forca()
 
         self.suposicao_label.configure(text=" ".join(self.suposicao_atual))
         if "*" not in self.suposicao_atual:
@@ -145,6 +155,8 @@ class HangmanAdivinhadorUI(ctk.CTk):
     def processar_nao_tem(self):
         """Processa o caso em que a letra não está na palavra."""
         self.solver.filter_negative(self.letra_atual)
+        self.erros += 1
+        self.atualizar_desenho_forca()
         self.suposicao_label.configure(text=" ".join(self.suposicao_atual))
         if "*" not in self.suposicao_atual:
             self.mensagem_label.configure(text="Adivinhei a palavra!")
@@ -176,6 +188,52 @@ class HangmanAdivinhadorUI(ctk.CTk):
         self.suposicao_atual = []
         self.letra_atual = ""
         self.letra_entries = []
+        self.erros = 0
+        self.hangman_canvas.delete("all")
+
+    def desenhar_forca(self):
+        """Desenha a estrutura da forca."""
+        c = self.hangman_canvas
+        # Base
+        c.create_line(20, 300, 200, 300, width=6, fill="#eee")
+        # Poste
+        c.create_line(60, 300, 60, 40, width=6, fill="#eee")
+        # Viga superior
+        c.create_line(60, 40, 160, 40, width=6, fill="#eee")
+        # Corda
+        c.create_line(160, 40, 160, 80, width=4, fill="#eee")
+
+    def atualizar_desenho_forca(self):
+        """Desenha partes do boneco conforme o número de erros."""
+        self.desenhar_forca()
+        c = self.hangman_canvas
+        # Cabeça
+        if self.erros >= 1:
+            c.create_oval(135, 80, 185, 130, width=4, outline="#eee")
+        # Corpo
+        if self.erros >= 2:
+            c.create_line(160, 130, 160, 210, width=4, fill="#eee")
+        # Braço esquerdo
+        if self.erros >= 3:
+            c.create_line(160, 150, 120, 180, width=4, fill="#eee")
+        # Braço direito
+        if self.erros >= 4:
+            c.create_line(160, 150, 200, 180, width=4, fill="#eee")
+        # Perna esquerda
+        if self.erros >= 5:
+            c.create_line(160, 210, 130, 260, width=4, fill="#eee")
+        # Perna direita
+        if self.erros >= 6:
+            c.create_line(160, 210, 190, 260, width=4, fill="#eee")
+        # Olhos (game over)
+        if self.erros >= 7:
+            c.create_line(145, 95, 155, 105, width=2, fill="#eee")
+            c.create_line(155, 95, 145, 105, width=2, fill="#eee")
+            c.create_line(165, 95, 175, 105, width=2, fill="#eee")
+            c.create_line(175, 95, 165, 105, width=2, fill="#eee")
+            self.mensagem_label.configure(text="Você perdeu! Tente novamente.")
+            self.submeter_button.configure(state="disabled")
+            self.nao_tem_button.configure(state="disabled")
 
 if __name__ == "__main__":
     app = HangmanAdivinhadorUI()
