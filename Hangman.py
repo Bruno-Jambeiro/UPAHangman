@@ -20,8 +20,15 @@ class HangmanSolver:
         self.theme = None
         self.working_data = None
         #self.minimum_similarity = 0.15
-        with open("AllWordsProcessed.pkl", "rb") as f:
-            self.data_full = pickle.load(f) #Todas as palavras de todos os tamanhos
+        try:
+            with open("AllWordsProcessed.pkl", "rb") as f:
+                self.data_full = pickle.load(f) #Todas as palavras de todos os tamanhos
+        except FileNotFoundError:
+            print("Arquivo de palavras não encontrado. Gerando Arquivo\nInsto deve demorar alguns minutos.")
+            import ProcessDict
+            ProcessDict.main()
+            with open("AllWordsProcessed.pkl", "rb") as f:
+                self.data_full = pickle.load(f)
 
 
     def new_game(self, theme: str, word_size:int):
