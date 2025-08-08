@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from Hangman import HangmanSolver  # Importa a classe HangmanSolver
 
-ctk.set_appearance_mode("Dark")  # Modo de aparência: "dark" ou "light")
+ctk.set_appearance_mode("Dark")  # Modo de aparência: "dark" ou "light"
 class HangmanAdivinhadorUI(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -19,6 +19,10 @@ class HangmanAdivinhadorUI(ctk.CTk):
         entry_font = ("JetBrains Mono", 24)
         button_font = ("JetBrains Mono", 24)
         mensagem_font = ("JetBrains Mono", 22)
+
+        # Nova label de instrução
+        self.instrucao_label = ctk.CTkLabel(self, text="Pense em uma palavra", font=label_font)
+        self.instrucao_label.grid(row=0, column=0, columnspan=2, pady=(30, 10))
 
         self.tema_label = ctk.CTkLabel(self, text="Tema:", font=label_font)
         self.tema_entry = ctk.CTkEntry(self, width=entry_width, font=entry_font)
@@ -46,23 +50,25 @@ class HangmanAdivinhadorUI(ctk.CTk):
         self.hangman_canvas.grid(row=0, column=2, rowspan=8, padx=30, pady=30)
         self.erros = 0
 
-        # Layout
-        self.tema_label.grid(row=0, column=0, padx=20, pady=20)
-        self.tema_entry.grid(row=0, column=1, padx=20, pady=20)
-        self.tamanho_label.grid(row=1, column=0, padx=20, pady=20)
-        self.tamanho_entry.grid(row=1, column=1, padx=20, pady=20)
-        self.iniciar_button.grid(row=2, column=0, columnspan=2, pady=20)
-        self.iniciar_button.grid()  # Always show with theme/size
+        # Layout (atualize os índices das linhas para acomodar a nova label)
+        self.tema_label.grid(row=1, column=0, padx=20, pady=20)
+        self.tema_entry.grid(row=1, column=1, padx=20, pady=20)
+        self.tamanho_label.grid(row=2, column=0, padx=20, pady=20)
+        self.tamanho_entry.grid(row=2, column=1, padx=20, pady=20)
+        self.iniciar_button.grid(row=3, column=0, columnspan=2, pady=20)
+        self.instrucao_label.grid()  # Always show with theme/size
 
-        self.suposicao_label.grid(row=3, column=0, columnspan=2, pady=20)
-        self.letra_label.grid(row=4, column=0, columnspan=2, pady=20)
-        self.letra_entries_frame.grid(row=5, column=0, columnspan=2, pady=20)
+        self.suposicao_label.grid(row=4, column=0, columnspan=2, pady=20)
+        self.letra_label.grid(row=5, column=0, columnspan=2, pady=20)
+        self.letra_entries_frame.grid(row=6, column=0, columnspan=2, pady=20)
         self.letra_entries_frame.grid_remove()
-        self.submeter_button.grid(row=6, column=0, pady=20)
+        self.submeter_button.grid(row=7, column=0, pady=20)
         self.submeter_button.grid_remove()
-        self.nao_tem_button.grid(row=6, column=1, pady=20)
+        self.nao_tem_button.grid(row=7, column=1, pady=20)
         self.nao_tem_button.grid_remove()
-        self.mensagem_label.grid(row=7, column=0, columnspan=2, pady=20)
+        self.mensagem_label.grid(row=8, column=0, columnspan=2, pady=20)
+        self.novo_jogo_button.grid(row=9, column=0, columnspan=2, pady=20)
+        self.novo_jogo_button.grid_remove()  # Hide initially
 
         # Variáveis do jogo
         self.solver = None
@@ -79,6 +85,7 @@ class HangmanAdivinhadorUI(ctk.CTk):
             return
 
         # Hide theme, size, and iniciar button together
+        self.instrucao_label.grid_remove()
         self.tema_label.grid_remove()
         self.tema_entry.grid_remove()
         self.tamanho_label.grid_remove()
@@ -168,6 +175,7 @@ class HangmanAdivinhadorUI(ctk.CTk):
     def novo_jogo(self):
         """Reseta o estado e mostra opções de tema/tamanho."""
         # Show theme, size, and iniciar button together
+        self.instrucao_label.grid()
         self.tema_label.grid()
         self.tema_entry.grid()
         self.tamanho_label.grid()
@@ -190,6 +198,7 @@ class HangmanAdivinhadorUI(ctk.CTk):
         self.letra_entries = []
         self.erros = 0
         self.hangman_canvas.delete("all")
+        self.instrucao_label.grid()  # Show instruction label again
 
     def desenhar_forca(self):
         """Desenha a estrutura da forca."""
