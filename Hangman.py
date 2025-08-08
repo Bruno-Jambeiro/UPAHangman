@@ -74,6 +74,7 @@ class HangmanSolver:
             self.filter_negative(chr(ord('A') + i))
 
     def filter_positive(self, new_guess):
+        #Ve quais letras ja foram confirmadas e filtra de acordo
         if len(new_guess) != len(self.guess):
             raise FilterError("Tamanho errado")
         self.guess = "".join((e if e != '*' else new_guess[i]) for i, e in enumerate(self.guess))
@@ -86,6 +87,7 @@ class HangmanSolver:
 
 
     def filter_negative(self, char):
+        #Em caso de um chute errado elimina as palavras com a letra char
         index = ord(char) - ord('A')
         self.negative_chars[index] = True
         self.working_data = [i for i in self.working_data if not i[3][index]]
