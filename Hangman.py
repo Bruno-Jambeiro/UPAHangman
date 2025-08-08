@@ -27,6 +27,7 @@ class HangmanSolver:
             print("Arquivo de palavras não encontrado. Gerando Arquivo\nInsto deve demorar alguns minutos.")
             import ProcessDict
             ProcessDict.main()
+            print("Arquivo de palavras gerado.")
             with open("AllWordsProcessed.pkl", "rb") as f:
                 self.data_full = pickle.load(f)
 

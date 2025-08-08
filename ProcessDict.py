@@ -23,7 +23,8 @@ def main():
         words = raw_text.split()
     words = [i.upper() for i in words]
     new_file = []
-    for word in words:
+    for word_count, word in enumerate(words):
+        print("Processando palavra", word_count, "de", len(words), end='\r')
         vec = model.get_word_vector(word)
         clean_word = remover_acentos(word).upper() #Torna letras maiúsculas o padrão
         tem_letra = np.zeros(26, dtype=np.float64)
@@ -37,7 +38,8 @@ def main():
 
     with open("AllWordsProcessed.pkl", "wb") as f:
         pickle.dump(new_file, f)
-    print(new_file)
+    if __name__ == '__main__':
+        print(new_file)
 
 if __name__ == '__main__':
     main()

@@ -71,7 +71,7 @@ class HangmanAdivinhadorUI(ctk.CTk):
         self.novo_jogo_button.grid_remove()  # Hide initially
 
         # Variáveis do jogo
-        self.solver = None
+        self.solver = HangmanSolver()  # Cria o solver uma vez
         self.suposicao_atual = []
         self.letra_atual = ""
 
@@ -99,8 +99,7 @@ class HangmanAdivinhadorUI(ctk.CTk):
         self.letra_entries_frame.grid()
         self.criar_letra_entries(tamanho)
 
-        self.solver = HangmanSolver()
-        self.solver.new_game(tema, tamanho)  # Inicializa o solver com tema e tamanho
+        self.solver.new_game(tema, tamanho)  # Reutiliza o solver existente
         self.suposicao_atual = ["*"] * tamanho  # Suposição inicial com asteriscos
         self.suposicao_label.configure(text=" ".join(self.suposicao_atual))
         self.fazer_suposicao()
@@ -192,7 +191,7 @@ class HangmanAdivinhadorUI(ctk.CTk):
         self.mensagem_label.configure(text="")
         self.submeter_button.configure(state="normal")
         self.nao_tem_button.configure(state="normal")
-        self.solver = None
+        self.solver = self.solver  # Mantém o solver existente
         self.suposicao_atual = []
         self.letra_atual = ""
         self.letra_entries = []
