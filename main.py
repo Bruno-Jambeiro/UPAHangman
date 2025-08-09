@@ -2,6 +2,8 @@ import customtkinter as ctk
 from Hangman import HangmanSolver  # Importa a classe HangmanSolver
 
 ctk.set_appearance_mode("Dark")  # Modo de aparência: "dark" ou "light"
+ctk.FontManager.load_font("JetBrainsMono-ExtraLight.ttf")
+
 class HangmanAdivinhadorUI(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -15,10 +17,10 @@ class HangmanAdivinhadorUI(ctk.CTk):
         # Larger widget and JetBrains Mono font sizes
         entry_width = 350
         button_width = 200
-        label_font = ("JetBrains Mono", 28)
-        entry_font = ("JetBrains Mono", 24)
-        button_font = ("JetBrains Mono", 24)
-        mensagem_font = ("JetBrains Mono", 22)
+        label_font = ("JetBrains Mono ExtraLight", 28)
+        entry_font = ("JetBrains Mono ExtraLight", 24)
+        button_font = ("JetBrains Mono ExtraLight", 24)
+        mensagem_font = ("JetBrains Mono ExtraLight", 22)
 
         # Nova label de instrução
         self.instrucao_label = ctk.CTkLabel(self, text="Pense em uma palavra", font=label_font)
