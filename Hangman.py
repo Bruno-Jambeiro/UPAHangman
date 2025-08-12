@@ -24,7 +24,7 @@ class HangmanSolver:
             with open("AllWordsProcessed.pkl", "rb") as f:
                 self.data_full = pickle.load(f) #Todas as palavras de todos os tamanhos
         except FileNotFoundError:
-            print("Arquivo de palavras não encontrado. Gerando Arquivo\nInsto deve demorar alguns minutos.")
+            print("Arquivo de palavras não encontrado. Gerando Arquivo\nIsto deve demorar alguns minutos.")
             import ProcessDict
             ProcessDict.main()
             print("Arquivo de palavras gerado.")
