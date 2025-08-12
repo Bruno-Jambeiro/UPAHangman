@@ -20,11 +20,23 @@ def main():
 
     with open('br-utf8.txt', 'r', encoding='utf-8') as file:
         raw_text = file.read()
-        words = raw_text.split()
-    words = [i.upper() for i in words]
+        part_1_words = raw_text.split()
+    part_1_words = [i.upper() for i in part_1_words]
+    print(f"Primeiro Dicionário: {len(part_1_words)}")
+    set_words = set(part_1_words)
+    print(f"Primeiro Conjunto: {len(set_words)}")
+    with open('palavras.txt', 'r', encoding='utf-8') as file:
+        raw_text = file.read()
+        part_2_words = raw_text.split()
+    part_2_words = [i.upper() for i in part_2_words]
+    #set_words.update(set(part_2_words))
+    print(f"Segundo Dicionário: {len(part_2_words)}")
+    words = list(set_words)
+    words.sort()
+    print(f"Total Dicionário: {len(words)}")
     new_file = []
     for word_count, word in enumerate(words):
-        print("Processando palavra", word_count, "de", len(words), end='\r')
+        print("Processando palavra", word_count, "de", len(words), end='\r', flush=True)
         vec = model.get_word_vector(word)
         clean_word = remover_acentos(word).upper() #Torna letras maiúsculas o padrão
         tem_letra = np.zeros(26, dtype=np.float64)
@@ -32,12 +44,14 @@ def main():
             try:
                 tem_letra[ord(char)-ord('A')] = 1.0
             except IndexError:
-                print(char, word, clean_word)
-                exit(-1)
+                print("\n", char, word, clean_word)
+                #exit(-1)
         new_file.append((clean_word, word, vec, tem_letra))
 
     with open("AllWordsProcessed.pkl", "wb") as f:
+        print("Salvando Arquivo")
         pickle.dump(new_file, f)
+        print("Arquivo Salvo")
     if __name__ == '__main__':
         print(new_file)
 
