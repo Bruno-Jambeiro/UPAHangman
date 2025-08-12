@@ -79,7 +79,7 @@ class HangmanAdivinhadorUI(ctk.CTk):
 
     def iniciar_jogo(self):
         """Inicia o jogo com o tema e tamanho fornecidos pelo jogador."""
-        tema = self.tema_entry.get().strip().upper()
+        tema = self.tema_entry.get().strip().lower()
         try:
             tamanho = int(self.tamanho_entry.get().strip())
         except ValueError:
@@ -131,7 +131,7 @@ class HangmanAdivinhadorUI(ctk.CTk):
         """Processa a resposta do jogador e atualiza o jogo."""
         posicoes = []
         for idx, entry in enumerate(self.letra_entries):
-            valor = entry.get().strip().upper()
+            valor = entry.get().strip().lower()
             # Só verifica campos que ainda não foram preenchidos
             if self.suposicao_atual[idx] == "*":
                 if valor == self.letra_atual:

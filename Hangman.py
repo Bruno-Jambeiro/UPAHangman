@@ -33,11 +33,11 @@ class HangmanSolver:
 
 
     def new_game(self, theme: str, word_size:int):
-        theme = theme.upper()
+        theme = theme.lower()
         working_data_raw = [i for i in self.data_full if len(i[0]) == word_size]
         print(f"Conjunto de palavras com {word_size} letras: {len(working_data_raw)}")
         self.theme = theme
-        self.theme_vec = next((t[2] for t in self.data_full if t[1].upper() == theme.upper()), None)
+        self.theme_vec = next((t[2] for t in self.data_full if t[1].lower() == theme.lower()), None)
         if self.theme_vec is None:
             import fasttext
             model = fasttext.load_model('cc.pt.300.bin')
@@ -50,7 +50,7 @@ class HangmanSolver:
         self.working_data_full = [(i[0], i[1], cosine(i[2], self.theme_vec), i[3]) for i in working_data_raw]
         self.working_data = self.working_data_full[:]
         self.working_data.sort(key=lambda x: x[2], reverse=True)
-        self.working_data = self.working_data[:(len(self.working_data) + 9)//10]
+        self.working_data = self.working_data[:(len(self.working_data) + 1)//2]
 
         print(f"Conjunto de palavras após filtragem temática: {len(self.working_data)}")
 
@@ -61,7 +61,7 @@ class HangmanSolver:
             contador_letras+= temp
         contador_letras = contador_letras * self.chars_guessed
         self.chars_guessed[np.argmax(contador_letras)] = -1.0
-        return chr(ord('A') + np.argmax(contador_letras))
+        return chr(ord('a') + np.argmax(contador_letras))
 
     def __match_word_guess(self, word):
         match = True
@@ -79,7 +79,7 @@ class HangmanSolver:
         self.filter_positive(self.guess)
         for i, v in enumerate(self.negative_chars):
             if not v : continue
-            self.filter_negative(chr(ord('A') + i))
+            self.filter_negative(chr(ord('a') + i))
 
     def filter_positive(self, new_guess):
         #Ve quais letras ja foram confirmadas e filtra de acordo
@@ -97,7 +97,7 @@ class HangmanSolver:
 
     def filter_negative(self, char):
         #Em caso de um chute errado elimina as palavras com a letra char
-        index = ord(char) - ord('A')
+        index = ord(char) - ord('a')
         self.negative_chars[index] = True
         self.working_data = [i for i in self.working_data if not i[3][index]]
         print(f"Palavras restantes: {len(self.working_data)}")
