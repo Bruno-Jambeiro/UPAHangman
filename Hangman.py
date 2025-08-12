@@ -88,9 +88,10 @@ class HangmanSolver:
         self.guess = "".join((e if e != '*' else new_guess[i]) for i, e in enumerate(self.guess))
         self.working_data = [i for i in self.working_data if self.__match_word_guess(i[0])]
         print(f"Palavras restantes: {len(self.working_data)}")
-
         if len(self.working_data) == 0:
             self.__add_more_words()
+        if len(self.working_data) < 10:
+            print("Palavras restantes:", [i[0] for i in self.working_data])
 
 
 
@@ -102,3 +103,5 @@ class HangmanSolver:
         print(f"Palavras restantes: {len(self.working_data)}")
         if len(self.working_data) == 0:
             self.__add_more_words()
+        if len(self.working_data) < 10:
+            print("Palavras restantes:", [i[0] for i in self.working_data])
