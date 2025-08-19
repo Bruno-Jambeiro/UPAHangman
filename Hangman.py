@@ -76,32 +76,42 @@ class HangmanSolver:
         print("Buscando Possibilidades")
         self.working_data = self.working_data_full
         print("Filtrando Novas possibilidades")
-        self.filter_positive(self.guess)
+        self.filter_positive(self.guess, recursion = False)
         for i, v in enumerate(self.negative_chars):
             if not v : continue
-            self.filter_negative(chr(ord('a') + i))
+            self.filter_negative(chr(ord('a') + i), recursion = False)
+        if (len(self.working_data) != 0):
+            return
+        self.working_data = self.working_data_full
+        self.guess = "".join([(lambda x: '*' if x not in "aeiouy" else x)(e) for e in self.guess])
+        self.filter_positive(self.guess, recursion = False)
+        if (len(self.working_data) != 0):
+            return
+        self.guess = "*" * len(self.guess)
+        self.working_data = self.working_data_full
 
-    def filter_positive(self, new_guess):
+
+    def filter_positive(self, new_guess, recursion = True):
         #Ve quais letras ja foram confirmadas e filtra de acordo
         if len(new_guess) != len(self.guess):
             raise FilterError("Tamanho errado")
         self.guess = "".join((e if e != '*' else new_guess[i]) for i, e in enumerate(self.guess))
         self.working_data = [i for i in self.working_data if self.__match_word_guess(i[0])]
         print(f"Palavras restantes: {len(self.working_data)}")
-        if len(self.working_data) == 0:
+        if recursion and len(self.working_data) == 0:
             self.__add_more_words()
         if len(self.working_data) < 10:
             print("Palavras restantes:", [i[0] for i in self.working_data])
 
 
 
-    def filter_negative(self, char):
+    def filter_negative(self, char, recursion = True):
         #Em caso de um chute errado elimina as palavras com a letra char
         index = ord(char) - ord('a')
         self.negative_chars[index] = True
         self.working_data = [i for i in self.working_data if not i[3][index]]
         print(f"Palavras restantes: {len(self.working_data)}")
-        if len(self.working_data) == 0:
+        if recursion and len(self.working_data) == 0:
             self.__add_more_words()
         if len(self.working_data) < 10:
             print("Palavras restantes:", [i[0] for i in self.working_data])
