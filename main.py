@@ -8,7 +8,9 @@ class HangmanAdivinhadorUI(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title("Adivinhador de Forca")
-        self.geometry(f"{1100}x{580}")
+        self.default_width = 1100
+        self.default_height = 580
+        self.geometry(f"{self.default_width}x{self.default_height}")
 
         # Configure grid columns to expand and center widgets
         self.grid_columnconfigure(0, weight=1)
@@ -110,6 +112,15 @@ class HangmanAdivinhadorUI(ctk.CTk):
         self.desenhar_forca()
 
     def criar_letra_entries(self, tamanho):
+        # Dynamically adjust window width for long words
+        min_entry_width = 70
+        padding = 20
+        if tamanho >= 12:
+            new_width = max(self.default_width, tamanho * min_entry_width + 400)
+            self.geometry(f"{new_width}x{self.default_height}")
+        else:
+            self.geometry(f"{self.default_width}x{self.default_height}")
+
         # Remove previous entries
         for widget in self.letra_entries_frame.winfo_children():
             widget.destroy()
